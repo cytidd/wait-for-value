@@ -1,11 +1,15 @@
 FROM node:latest
 
-RUN npm install -g simple-git
+RUN apt-get update && \
+    apt-get install -y python-setuptools python-dev build-essential && \
+    easy_install pip && \
+    pip install sh
 
-ENV NODE_PATH=/usr/local/lib/node_modules
+ENV MAX_TO_CHECK=5
+ENV FILE_TO_CHECK=test.json
+ENV KEY_TO_CHECK=version
 
-# expect a file named wait.js to be mounted at /usr/src/app
+WORKDIR /usr/src/app
+COPY wait.py /usr/src/app/
 
-# COPY wait.js /usr/src/app
-
-CMD ["node", "wait.js"]
+CMD ["python", "wait.py"]
